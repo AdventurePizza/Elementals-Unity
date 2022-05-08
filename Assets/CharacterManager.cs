@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class CharacterManager : MonoBehaviour
     public AudioClip takeHitSFX;
     public AudioClip blockSFX;
     public AudioClip gameover;
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -43,7 +46,7 @@ public class CharacterManager : MonoBehaviour
         Debug.Log(Camera);
         CamHolder = Camera.transform.parent.gameObject;
         CamHolder.GetComponent<CamFollow>().SetPlayer(gameObject);
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
 
@@ -141,6 +144,7 @@ public class CharacterManager : MonoBehaviour
                         anim.SetTrigger("death"); 
                         dead = true;
                         FightManager.GetComponent<FightManager>().setPlayerDead(); 
+                        SceneManager.LoadScene (sceneName:"end");
                     }
 
                 }

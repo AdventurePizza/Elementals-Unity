@@ -40,10 +40,13 @@ public class Sync : MonoBehaviour
     public AudioClip changeR;
     public AudioClip changeL;
     public AudioClip select;
+    
+    public GameObject unplayable;
+
     void Start()
     {
-        Debug.Log("wrong build");
-        setCharacters("public");
+        //Debug.Log("wrong build");
+        //setCharacter("Hashashin.75.3500.40%.60%.40%.60%");
     }
 
     // when the GameObjects collider arrange for this GameObject to travel to the left of the screen
@@ -96,68 +99,66 @@ public class Sync : MonoBehaviour
         else{
             Debug.Log(characters[currentCharIndex].type);
         }
-    }
-
-    void setCharacters(string objktIds)
-    {
-
-        objktIds = ",Knight.220.430.80%.80%.60%.60%,Hashashin.104.450.60%.80%.60%.60%,Monk.143.333.80%.80%.80%.80%,Priestess.133.333.80%.80%.80%.80%";
-        
-        /*
-        if(objktIds == "public"){
-            objktIds = ",Knight.143.17.60%.80%.60%.60%,Knight.220.137.80%.80%.60%.60%";
+/*
+        for(int i = 0; i < guiObjects.Length; i++){
+            guiObjects[i].SetActive(true);
         }
         */
+    }
 
-        //cam.SetActive(false);
-        //Object.Destroy(cam, 0);
-        
+    void setCharacter(string objktIds)
+    {
+
         for(int i = 0; i < guiObjects.Length; i++){
             guiObjects[i].SetActive(true);
         }
 
-    	Debug.Log("t1");
-    	Debug.Log(objktIds);
-    	string[] objkts = objktIds.Split(',');
-    	
-    	for(int i = 0; i < objkts.Length; i++){
-            string[] attributes = objkts[i].Split('.');
-
-            if(attributes[0]  == "Knight" || attributes[0]  == "Hashashin" || attributes[0]  == "Monk" || attributes[0]  == "Priestess" ){
-                Character temp = new Character();
-                temp.type = attributes[0];
-                temp.attack = int.Parse(attributes[1]);
-                temp.health = int.Parse(attributes[2]);
-                temp.attack1 = int.Parse(attributes[3].Replace('%', ' '));
-                temp.attack2 = int.Parse(attributes[4].Replace('%', ' '));
-                temp.attack3 = int.Parse(attributes[5].Replace('%', ' '));
-                temp.attackSP = int.Parse(attributes[6].Replace('%', ' '));
-                characters.Add(temp);
+            if(currentChar){
+                if(currentChar.GetComponent<CharacterManager>().isPlaying){
+                    
+                    return;
+                }
+                Destroy(currentChar, 0);
             }
 
-            Debug.Log("hey: " + attributes[0]);
-        }
-
-            if(characters[0].type == "Knight"  ){
+            string[] attributes = objktIds.Split('.');
+            for(int i = 0; i < guiObjects.Length; i++){
+                guiObjects[i].SetActive(true);
+            }
+            unplayable.SetActive(false);
+            if(attributes[0] == "Knight"  ){
                 currentChar = Instantiate(knight, new Vector3(0, -0.57f, 0), Quaternion.identity);
-
             }
-            else if (characters[0].type == "Hashashin" ){
+            else if (attributes[0] == "Hashashin" ){
                 currentChar = Instantiate(hashashin, new Vector3(0, -4.37f, 0), Quaternion.identity);
             }
-            else if (characters[0].type == "Monk" ){
+            else if (attributes[0] == "Monk" ){
                 currentChar = Instantiate(monk, new Vector3(0, 0, 0), Quaternion.identity);
             }
-            else if(characters[0].type == "Priestess"){
+            else if(attributes[0] == "Priestess"){
                 currentChar = Instantiate(priestess, new Vector3(0, 0, 0), Quaternion.identity);
+            }else{
+                for(int i = 0; i < guiObjects.Length; i++){
+                    guiObjects[i].SetActive(false);
+                }
+                unplayable.SetActive(true);
             }
 
-            textAttack.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack: " + characters[0].attack;
-            textHealth.GetComponent<TMPro.TextMeshProUGUI>().text = "Health: " + characters[0].health;
-            textAttack1.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack1: " + characters[0].attack1 + "%";
-            textAttack2.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack2: " + characters[0].attack2 + "%";
-            textAttack3.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack3: " + characters[0].attack3 + "%";
-            textAttackSP.GetComponent<TMPro.TextMeshProUGUI>().text = "AttackSP: " + characters[0].attackSP + "%";
+            textAttack.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack: " + attributes[1];
+            textHealth.GetComponent<TMPro.TextMeshProUGUI>().text = "Health: " + attributes[2];
+            textAttack1.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack1: " + attributes[3];
+            textAttack2.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack2: " + attributes[4];
+            textAttack3.GetComponent<TMPro.TextMeshProUGUI>().text = "Attack3: " + attributes[5];
+            textAttackSP.GetComponent<TMPro.TextMeshProUGUI>().text = "AttackSP: " + attributes[6];
+
+            currentChar.GetComponent<CharacterManager>().setStats(
+                int.Parse(attributes[1]), int.Parse(attributes[2]),
+                 int.Parse(attributes[3].Replace('%', ' ')),
+                 int.Parse(attributes[4].Replace('%', ' ')),
+                 int.Parse(attributes[5].Replace('%', ' ')),
+                 int.Parse(attributes[6].Replace('%', ' '))
+                 );
+            
     }
     public void SelectCharacter()
     {
@@ -171,12 +172,12 @@ public class Sync : MonoBehaviour
         }
         //testing scene
         if(testingChar){
-            testingChar.GetComponent<CharacterManager>().setStats(characters[currentCharIndex].attack, characters[currentCharIndex].health, characters[currentCharIndex].attack1, characters[currentCharIndex].attack2, characters[currentCharIndex].attack3, characters[currentCharIndex].attackSP);
+            //testingChar.GetComponent<CharacterManager>().setStats(characters[currentCharIndex].attack, characters[currentCharIndex].health, characters[currentCharIndex].attack1, characters[currentCharIndex].attack2, characters[currentCharIndex].attack3, characters[currentCharIndex].attackSP);
 
             testingChar.GetComponent<CharacterManager>().startPlaying();
         }
         else{
-            currentChar.GetComponent<CharacterManager>().setStats(characters[currentCharIndex].attack, characters[currentCharIndex].health, characters[currentCharIndex].attack1, characters[currentCharIndex].attack2, characters[currentCharIndex].attack3, characters[currentCharIndex].attackSP);
+            //currentChar.GetComponent<CharacterManager>().setStats(characters[currentCharIndex].attack, characters[currentCharIndex].health, characters[currentCharIndex].attack1, characters[currentCharIndex].attack2, characters[currentCharIndex].attack3, characters[currentCharIndex].attackSP);
             currentChar.GetComponent<CharacterManager>().startPlaying();
         }
 

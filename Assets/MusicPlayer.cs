@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MusicPlayer : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class MusicPlayer : MonoBehaviour
     public AudioClip[] Musics;
     public int currentIndex = 0;
     public string[] names;
+    public AudioListener AudioListener;
+    public Button button;
+
+    public Sprite muted;
+    public Sprite unmuted;
      // Use this for initialization
     void Start () {
         MpPlayer.clip = Musics[currentIndex];
@@ -34,5 +40,14 @@ public class MusicPlayer : MonoBehaviour
         MpPlayer.clip = Musics[currentIndex];
         MpPlayer.Play();
 
+    }
+
+    public void mute(){
+        AudioListener.pause = !(AudioListener.pause);
+        if(AudioListener.pause){
+            button.GetComponent<Image>().sprite = muted;
+        }else{
+            button.GetComponent<Image>().sprite = unmuted;
+        }
     }
 }

@@ -9,6 +9,7 @@ public class NextScene : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        SceneManager.LoadScene (sceneName:"stage2");
+        //SceneManager.LoadScene (sceneName:"stage2");
+        SceneManager.LoadScene (sceneName:"end");
     }
 }

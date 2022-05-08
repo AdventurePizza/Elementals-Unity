@@ -52,6 +52,7 @@ public class EnemyManager : MonoBehaviour
                 player.GetComponent<CharacterManager>().nextEnemy();
                 boxCollider2d.enabled = false;
                 m_Rigidbody.bodyType = RigidbodyType2D.Static;
+                Destroy(gameObject, 0);
             }
 
         }
@@ -92,6 +93,11 @@ public class EnemyManager : MonoBehaviour
     public void attackPlayer(){
         FightManager.GetComponent<FightManager>().readyFight(false, false);
         Debug.Log("enemy attacks player");
+
+                    anim.SetTrigger("attack");
+            currentState = "attack";
+
+            /*
         if(gameObject.name == "enemy-old"){
             anim.SetTrigger("attack");
             currentState = "attack";
@@ -108,7 +114,7 @@ public class EnemyManager : MonoBehaviour
                     currentState = "attack2";
                     break;
             }
-        }
+        }*/
     }
 
 }
